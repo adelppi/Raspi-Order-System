@@ -7,3 +7,9 @@ h1 {
     font-size: 100px;
 }
 </style>
+
+<script>
+export default {
+
+}
+</script>
