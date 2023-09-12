@@ -1,0 +1,3 @@
+<template>
+    これはWait.vueです
+</template>
