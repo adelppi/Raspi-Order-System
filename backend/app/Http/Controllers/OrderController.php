@@ -12,6 +12,12 @@ class OrderController extends Controller
         return Order::all();
     }
 
+    public function clearAllOrders()
+    {
+        Order::truncate();
+        return "cleared all orders";
+    }
+
     public function test($table_id)
     {
         dd($table_id);

@@ -1,6 +1,7 @@
 <script>
 export default {
   props: {
+    menuId: Number,
     title: String,
     price: Number,
     description: String,
@@ -8,31 +9,21 @@ export default {
   },
   data() {
     return {
-      quantity: 1, // 初期値は1
+      quantity: 1,
     };
   },
   methods: {
-    // 個数を増やすメソッド
     incrementQuantity() {
       this.quantity++;
     },
-    // 個数を減らすメソッド
     decrementQuantity() {
       if (this.quantity > 1) {
         this.quantity--;
       }
     },
-    // カートに追加するメソッド
     addToCart() {
-      // カートに商品を追加するロジックをここに追加する
-      // この例では、個数と商品情報をカートに追加するだけと仮定します
-      const cartItem = {
-        title: this.title,
-        price: this.price,
-        quantity: this.quantity,
-      };
-      // カートに商品を追加する処理を追加する
-    },
+      this.$emit('update-cart', this.menuId, this.quantity);
+    }
   },
 };
 </script>
@@ -53,7 +44,7 @@ export default {
           <button class="increment-button" @click="incrementQuantity">+</button>
         </div>
       </div>
-      <button class="add-to-cart-button">カートに追加</button>
+      <button class="add-to-cart-button" @click="addToCart">カートに追加</button>
     </div>
   </div>
 </template>
@@ -71,10 +62,6 @@ export default {
   transition: transform 0.2s;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-}
-
 .card-image img {
   width: 100%;
   height: auto;
@@ -82,8 +69,9 @@ export default {
 
 .card-content {
   background-color: #ffffff;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  /* padding-left: 1rem;
+  padding-right: 1rem; */
+  padding: 1rem;
 }
 
 .card-title {
@@ -110,11 +98,12 @@ export default {
 }
 
 .add-to-cart-button {
-  background-color: #007bff;
+  background-color: #419dff;
   color: #fff;
   border: none;
   border-radius: 4px;
-  padding: 8px 16px;
+  /* padding: 8px 16px; */
+  ;
   margin-top: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -141,6 +130,7 @@ export default {
   cursor: pointer;
   transition: background-color 0.2s;
 }
+
 .quantity-number {
   background-color: #ffffff;
   font-size: 1.5rem;
@@ -150,6 +140,7 @@ export default {
   margin: 2px 0px 2px 0px;
   transition: background-color 0.2s;
 }
+
 .quantity-selector {
   display: flex;
   background-color: #efefef;

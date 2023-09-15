@@ -11,32 +11,8 @@ export default {
     data() {
         return {
             table_number: 0,
-            menus: [
-                // {
-                //     title: "ラズパイ",
-                //     price: 300,
-                //     description: "食べられるラズパイです！",
-                //     imagePath: "src/assets/pie.jpg"
-                // },
-                // {
-                //     title: "クッキー",
-                //     price: 200,
-                //     description: "フランス人が焼きました。",
-                //     imagePath: "src/assets/cookie.jpg"
-                // },
-                // {
-                //     title: "ジュース",
-                //     price: 150,
-                //     description: "世界一おいしいジュース！",
-                //     imagePath: "src/assets/juice.jpg"
-                // },
-            ],
-            cart:
-            {
-                "1": 2,
-                "2": 1,
-                "3": 10,
-            },
+            menus: [],
+            cart: {},
             order_items: [],
             showCartDialog: false
         }
@@ -64,6 +40,24 @@ export default {
                 "table_number": this.table_number,
                 "order_items": this.order_items
             })
+        },
+        // 子(Card.vue)から親(Menu.vue)へ変数の受け渡し
+        updateCart(menuId, quantity) {
+            if (menuId in this.cart) {
+                this.cart[menuId] += quantity
+            } else {
+                this.cart[menuId] = quantity
+            }
+        },
+        removeItem(item) {
+            delete (this.cart[item])
+        },
+        calculateTotal() {
+            let totalPrice = 0
+            for (let menuId in this.cart) {
+                totalPrice += this.menus[menuId - 1]["price"] * this.cart[menuId]
+            }
+            return totalPrice
         }
     },
     mounted() {
@@ -76,21 +70,42 @@ export default {
 <template>
     <h1>メニュー</h1>
     <div v-if="showCartDialog" class="cart-dialog">
-        <h2>カート</h2>
-        <ul>
-            <li v-for="(quantity, item) in cart">
-                {{ item }} x {{ quantity }}
-            </li>
-        </ul>
-        <RouterLink to="/Wait">
-            <span @click="createOrder()" class="largeButton">
-                注文する
-            </span>
-        </RouterLink>
+        <div v-if="Object.keys(cart).length">
+            <h2>カート</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>商品名</th>
+                        <th>数量</th>
+                        <th>価格</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(quantity, item) in cart" :key="item">
+                        <td>
+                            <button @click="removeItem(item)">削除</button>
+                            {{ menus[item - 1]["title"] }}
+                        </td>
+                        <td>{{ quantity }}</td>
+                        <td>¥{{ menus[item - 1]["price"] * quantity }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="total">合計金額: ¥{{ calculateTotal() }}</p>
+            <RouterLink to="/Wait">
+                <span @click="createOrder()" class="order-button">
+                    注文する
+                </span>
+            </RouterLink>
+        </div>
+        <div v-else>
+            <h2>カートに何もないよ！</h2>
+        </div>
     </div>
+    <div v-if="showCartDialog" class="overlay" @click="showCartDialog = false"></div>
     <div class="content" :class="{ 'disable-events': showCartDialog }">
-        <Card v-for="menu in menus" :title="menu.title" :price="menu.price" :description="menu.description"
-            :imagePath="`../src/assets/${menu.menu_id}.jpg`" />
+        <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price"
+            :description="menu.description" :imagePath="`../src/assets/${menu.menu_id}.jpg`" @update-cart="updateCart" />
     </div>
     <div class="fixed-button">
         <button @click="showCartDialog = !showCartDialog">
@@ -112,37 +127,78 @@ export default {
     right: 20px;
 }
 
+.order-button {
+    background-color: #419dff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
 .cart-dialog {
     position: fixed;
-    width: 80%;
-    height: 60%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    /* max-width: 300px; */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: antiquewhite;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    max-width: 400px;
+    width: 90%;
+}
+
+.cart-dialog h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+
+.total {
+    font-weight: bold;
+    text-align: right;
 }
 
 .disable-events {
     pointer-events: none;
 }
 
-.largeButton {
-    padding: 18px 30px;
-    color: white;
-    background: linear-gradient(to bottom right, #f09e41, #e6488f, #4ab1d0);
-    background-size: 150% auto;
-    border-radius: 8px;
-    border: 2.5px solid transparent;
-    border-color: #ffffff;
-    font-size: 35px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
     cursor: pointer;
-    transition: 0.5s;
-}
-
-.largeButton:hover {
-    background-position: right;
-    border-color: #646cff;
+    overflow: hidden;
+    touch-action: none;
 }
 </style>

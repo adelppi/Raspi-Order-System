@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/menus', [MenuController::class, 'index']);
 Route::get('/orders', [OrderController::class, 'index']);
 Route::get('/{table_id}/test', 'App\Http\Controllers\OrderController@test');
+Route::get('/clear-all-orders', 'App\Http\Controllers\OrderController@clearAllOrders');
 Route::post('/create-order', 'App\Http\Controllers\OrderController@createOrder');
 Route::get('/order-status', 'App\Http\Controllers\OrderController@orderStatus');
