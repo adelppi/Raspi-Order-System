@@ -57,7 +57,7 @@ export default {
     </div>
   </div>
 </template>
-  
+
 
 <style scoped>
 .card {
@@ -156,4 +156,3 @@ export default {
   border-radius: 4px;
 }
 </style>
-  
