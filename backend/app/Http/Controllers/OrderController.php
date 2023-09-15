@@ -19,14 +19,44 @@ class OrderController extends Controller
 
     public function createOrder(Request $request)
     {
-        // JSONデータを取得
         $jsonData = $request->json()->all();
-        // 注文をデータベースに登録
-        $order = new Order;
-        $order->table_number = $jsonData["table_number"];
-        $order->save();
+
+        $tableNumber = $jsonData["table_number"];
+        $order_items = $jsonData["order_items"];
+
         
-        // 成功応答を返す（必要に応じてカスタマイズ）
+        foreach ($order_items as $item) {
+            $order = new Order;
+            $order->table_number = $tableNumber;
+            $order->menu_id = $item;
+            $order->save();
+        }
+
+
+        return $jsonData;
+    }
+
+    public function orderStatus()
+    {
+        $data = Order::select('table_number', 'menu_id')
+            ->selectRaw('COUNT(*) as count')
+            ->groupBy('table_number', 'menu_id')
+            ->get();
+
+        $jsonData = [];
+
+        foreach ($data as $item) {
+            $tableNumber = $item->table_number;
+            $menuId = $item->menu_id;
+            $count = $item->count;
+
+            if (!isset($jsonData[$tableNumber])) {
+                $jsonData[$tableNumber] = [];
+            }
+
+            $jsonData[$tableNumber][$menuId] = $count;
+        }
+
         return $jsonData;
     }
 }

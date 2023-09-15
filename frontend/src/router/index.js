@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Menu from '../views/Menu.vue'
 import Check from '../views/Check.vue'
 import Wait from '../views/Wait.vue'
+import OrderStatus from '../views/OrderStatus.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -12,7 +13,7 @@ const router = createRouter({
             redirect: '/Menu'
         },
         {
-            path: '/Menu',
+            path: '/:table_number/Menu',
             component: Menu
         },
         {
@@ -22,6 +23,10 @@ const router = createRouter({
         {
             path: '/Wait',
             component: Wait
+        },
+        {
+            path: '/OrderStatus',
+            component: OrderStatus
         }
     ]
 })

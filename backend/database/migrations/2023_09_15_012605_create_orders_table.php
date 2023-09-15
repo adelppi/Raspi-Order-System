@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('table_number');
             $table->unsignedBigInteger('menu_id');
             $table->foreign('menu_id')->references('menu_id')->on('menus');
+            $table->timestamps();
         });
     }
 
