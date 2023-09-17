@@ -2,10 +2,12 @@
 import { RouterLink } from "vue-router"
 import axios from "axios"
 import Card from "../components/Card.vue"
+import Banner from "../components/Banner.vue"
 
 export default {
     components: {
         Card,
+        Banner,
         RouterLink
     },
     data() {
@@ -14,7 +16,8 @@ export default {
             menus: [],
             cart: {},
             order_items: [],
-            showCartDialog: false
+            showCartDialog: false,
+            banners: []
         }
     },
     methods: {
@@ -48,6 +51,12 @@ export default {
             } else {
                 this.cart[menuId] = quantity
             }
+            this.banners.push(
+                {
+                    "itemTitle": this.menus[menuId - 1]["title"],
+                    "quantity": quantity
+                }
+            )
         },
         removeItem(item) {
             delete (this.cart[item])
@@ -103,7 +112,11 @@ export default {
         </div>
     </div>
     <div v-if="showCartDialog" class="overlay" @click="showCartDialog = false"></div>
-    <div class="content" :class="{ 'disable-events': showCartDialog }">
+
+    <div class="banner-stack">
+        <Banner v-for="banner in banners" :itemTitle="banner.itemTitle" :quantity="banner.quantity" />
+    </div>
+    <div :class="{ 'disable-events': showCartDialog }">
         <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price"
             :description="menu.description" :imagePath="`../src/assets/${menu.menu_id}.jpg`" @update-cart="updateCart" />
     </div>
@@ -120,6 +133,15 @@ export default {
 </template>
 
 <style scoped>
+.banner-stack {
+    display: flex;
+    flex-direction: column-reverse;
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%, 0); 
+}
+
 .fixed-button {
     border-radius: 50%;
     position: fixed;

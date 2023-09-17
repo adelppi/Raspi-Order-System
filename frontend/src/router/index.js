@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Menu from '../views/Menu.vue'
-import Check from '../views/Check.vue'
+import TableStatus from '../views/TableStatus.vue'
 import Wait from '../views/Wait.vue'
 import OrderStatus from '../views/OrderStatus.vue'
 
@@ -17,8 +17,8 @@ const router = createRouter({
             component: Menu
         },
         {
-            path: '/Check',
-            component: Check
+            path: '/TableStatus',
+            component: TableStatus
         },
         {
             path: '/Wait',

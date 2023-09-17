@@ -18,9 +18,9 @@ class OrderController extends Controller
         return "cleared all orders";
     }
 
-    public function test($table_id)
+    public function doneServing($tableNumber)
     {
-        dd($table_id);
+        Order::where('table_number', $tableNumber)->delete();
     }
 
     public function createOrder(Request $request)
@@ -30,7 +30,7 @@ class OrderController extends Controller
         $tableNumber = $jsonData["table_number"];
         $order_items = $jsonData["order_items"];
 
-        
+
         foreach ($order_items as $item) {
             $order = new Order;
             $order->table_number = $tableNumber;
@@ -42,7 +42,7 @@ class OrderController extends Controller
         return $jsonData;
     }
 
-    public function orderStatus()
+    public function orderStatusSorted()
     {
         $data = Order::select('table_number', 'menu_id')
             ->selectRaw('COUNT(*) as count')
@@ -64,5 +64,34 @@ class OrderController extends Controller
         }
 
         return $jsonData;
+    }
+
+    public function orderStatus()
+    {
+        $data = Order::select('table_number', 'menu_id')
+            ->groupBy('table_number', 'menu_id')
+            ->selectRaw('table_number, menu_id, count(*) as count')
+            ->get();
+
+        $result = [];
+
+        foreach ($data as $row) {
+            $tableNumber = $row->table_number;
+            $menuId = $row->menu_id;
+            $count = $row->count;
+
+            if (!isset($result[$tableNumber])) {
+                $result[$tableNumber] = [];
+            }
+
+            $result[$tableNumber][$menuId] = $count;
+        }
+
+        $finalResult = [];
+        foreach ($result as $tableNumber => $menuCounts) {
+            $formattedData = [$tableNumber => $menuCounts];
+            $finalResult[] = $formattedData;
+        }
+        return $finalResult;
     }
 }

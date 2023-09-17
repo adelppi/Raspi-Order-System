@@ -1,3 +1,0 @@
-<template>
-    これはCheck.vueです
-</template>

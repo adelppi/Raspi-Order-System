@@ -111,7 +111,7 @@ export default {
 
 .decrement-button {
   background-color: #efefef;
-  color: #ff4444;
+  color: #c41c4c;
   border: none;
   border-radius: 4px;
   padding: 6px 12px;
@@ -122,7 +122,7 @@ export default {
 
 .increment-button {
   background-color: #efefef;
-  color: #047f00;
+  color: #419dff;
   border: none;
   border-radius: 4px;
   padding: 6px 12px;

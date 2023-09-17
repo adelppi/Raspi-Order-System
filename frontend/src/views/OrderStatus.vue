@@ -5,7 +5,7 @@ export default {
     data() {
         return {
             menus: [],
-            orderStatus: {}
+            orderStatus: []
         }
     },
     methods: {
@@ -31,6 +31,9 @@ export default {
     mounted() {
         this.fetchMenu()
         this.fetchOrderStatus()
+        setInterval(() => {
+            this.fetchOrderStatus();
+        }, 2500);
     }
 }
 </script>
@@ -44,8 +47,8 @@ export default {
                 <th>数量</th>
             </tr>
         </thead>
-        <tbody>
-            <tr v-for="(orderItems, tableNumber) in orderStatus" :key="tableNumber">
+        <tbody v-for="order in orderStatus">
+            <tr v-for="(orderItems, tableNumber) in order" :key="tableNumber">
                 <td>{{ tableNumber }}</td>
                 <td>
                     <span v-for="(_, menu_id) in orderItems" :key="menu_id">
