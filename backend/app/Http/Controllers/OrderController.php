@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Menu;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,25 @@ class OrderController extends Controller
 
     public function doneServing($tableNumber)
     {
+        
+        $data = Order::where('table_number', $tableNumber)
+        ->select('menu_id', Order::raw('COUNT(*) as quantity'))
+        ->groupBy('menu_id')
+        ->get();
+        
+        $menuIdAndQuantities = [];
+        foreach ($data as $row) {
+            $menuIdAndQuantities[$row->menu_id] = $row->quantity;
+        }
+
+        foreach ($menuIdAndQuantities as $menuId => $consumedStock) {
+            $menu = Menu::where('menu_id', $menuId)->first();
+            $newStock = $menu["stock"] - $consumedStock;
+            $menu->update(['stock' => $newStock]);
+        }
+        
         Order::where('table_number', $tableNumber)->delete();
+        return $menu;
     }
 
     public function createOrder(Request $request)
