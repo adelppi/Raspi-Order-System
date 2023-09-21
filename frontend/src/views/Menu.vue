@@ -117,7 +117,7 @@ export default {
         <Banner v-for="banner in banners" :itemTitle="banner.itemTitle" :quantity="banner.quantity" />
     </div>
     <div :class="{ 'disable-events': showCartDialog }">
-        <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price"
+        <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price" :stock="menu.stock"
             :description="menu.description" :imagePath="`../src/assets/${menu.menu_id}.jpg`" @update-cart="updateCart" />
     </div>
     <div class="fixed-button">

@@ -11,4 +11,15 @@ class MenuController extends Controller
     {
         return Menu::all();
     }
+
+    public function updateStock(Request $request)
+    {
+        $jsonData = $request->json()->all();
+        $menuId = $jsonData["menuId"];
+        $updateQuantity = $jsonData["updateQuantity"];
+        
+        $menu = Menu::where("menu_id", "=", $menuId)->first();
+        $menu->stock = $updateQuantity;
+        $menu->save();
+    }
 }

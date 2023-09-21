@@ -3,6 +3,7 @@ import Menu from '../views/Menu.vue'
 import TableStatus from '../views/TableStatus.vue'
 import Wait from '../views/Wait.vue'
 import OrderStatus from '../views/OrderStatus.vue'
+import UpdateStock from '../views/UpdateStock.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -27,6 +28,10 @@ const router = createRouter({
         {
             path: '/OrderStatus',
             component: OrderStatus
+        },
+        {
+            path: '/UpdateStock',
+            component: UpdateStock
         }
     ]
 })

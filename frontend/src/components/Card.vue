@@ -4,6 +4,7 @@ export default {
     menuId: Number,
     title: String,
     price: Number,
+    stock: Number,
     description: String,
     imagePath: String,
   },
@@ -35,6 +36,7 @@ export default {
     </div>
     <div class="card-content">
       <h3 class="card-title">{{ title }}</h3>
+      <span v-if="stock === 0">在庫ないよ</span>
       <p class="card-description">{{ description }}</p>
       <div class="card-footer">
         <span class="card-price">¥{{ price }}</span>

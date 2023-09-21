@@ -30,6 +30,13 @@ export default {
         doneServing(tableNumber) {
             axios.get(`http://127.0.0.1:8000/api/${tableNumber}/done-serving`)
             this.fetchOrderStatus()
+        },
+        calculateTotal(tableNumber) {
+            let totalPrice = 0
+            for (let menuId in this.orderStatus[tableNumber]) {
+                totalPrice += this.menus[menuId - 1]["price"] * this.orderStatus[tableNumber][menuId]
+            }
+            return totalPrice
         }
     },
     mounted() {
@@ -43,90 +50,116 @@ export default {
 </script>
 
 <template>
+    <h2>注文状況</h2>
     <table>
         <thead>
             <tr>
-                <th>テーブル番号</th>
-                <th>注文</th>
+                <th>テーブル<br>番号</th>
+                <th>注文・金額</th>
                 <th>提供状況</th>
-                <th>提供終了ボタン</th>
+                <th>提供終了<br>ボタン</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="tableNumber in 6">
                 <td>{{ tableNumber }}</td>
+
                 <td>
-                    <span v-for="(quantity, menu_id) in orderStatus[tableNumber]">
-                        {{ menus[menu_id - 1]["title"] }} x {{ quantity }}
+                    <span v-for="(quantity, menu_id) in orderStatus[tableNumber]" style="text-align: right;">
+                        {{ menus[menu_id - 1]["title"] }} × {{ quantity }} <br>
+                    </span>
+                    <hr v-if="orderStatus[tableNumber]">
+                    <span v-if="orderStatus[tableNumber]" class="price">
+                        ¥{{ calculateTotal(tableNumber) }}
                     </span>
                 </td>
-                <td v-if="orderStatus[tableNumber]"><span class="status-done">提供待ち</span></td>
-                <td v-else><span class="status-not-done">空席/提供済み</span></td>
-                <td v-if="orderStatus[tableNumber]"><button class="done-button"
-                        @click="doneServing(tableNumber)">✔</button></td>
-                <td v-else><button class="done-button-disabled" disabled>✔︎</button></td>
+
+                <td v-if="orderStatus[tableNumber]">
+                    <span class="status-done">
+                        <p>提供待ち</p>
+                    </span>
+                </td>
+
+                <td v-else>
+                    <span class="status-not-done">
+                        <p>空席 or<br>提供済み</p>
+                    </span>
+                </td>
+
+                <td v-if="orderStatus[tableNumber]">
+                    <button class="done-button" @click="doneServing(tableNumber)">✔</button>
+                </td>
+
+                <td v-else>
+                    <button class="done-button-disabled" disabled>✔︎</button>
+                </td>
             </tr>
         </tbody>
     </table>
 </template>
 
 <style scoped>
-.status-done {
-    border-radius: 8px;
-    border: 3px solid transparent;
-    padding: 1rem;
-    font-size: 1em;
+.status-done,
+.status-not-done,
+.done-button,
+.done-button-disabled {
+    width: 3rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
     font-weight: 500;
-    font-family: inherit;
+    border-radius: 8px;
+}
+
+.status-done,
+.status-not-done {
+    /* height: 100%; */
+    border: 1.25px solid transparent;
+}
+
+.status-done {
     border-color: #ecaa90;
-    transition: border-color 0.25s;
 }
 
 .status-not-done {
-    border-radius: 8px;
-    border: 3px solid transparent;
-    padding: 1rem;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
     border-color: #90eca2;
-    transition: border-color 0.25s;
 }
 
-.done-button {
-    border-radius: 8px;
+.done-button,
+.done-button-disabled {
+    height: 2rem;
+    width: 2rem;
     border: 1px solid transparent;
-    padding: 1rem;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
+    font-size: 10px;
     background-color: #90eca2;
     cursor: pointer;
-    transition: border-color 0.25s;
 }
 
 .done-button-disabled {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 1rem;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
     background-color: #c1c1c1;
-    transition: border-color 0.25s;
+}
+
+.price {
+    text-align: right;
+    font-weight: 600;
+}
+
+p {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 table {
     width: 100%;
-    font-size: 25px;
+    font-size: 10px;
     border-collapse: collapse;
-    margin-bottom: 20px;
 }
 
 th,
 td {
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 8px;
     text-align: center;
 }
 
@@ -140,6 +173,12 @@ tr:nth-child(even) {
 
 td span {
     display: block;
-    margin-bottom: 5px;
+}
+
+hr {
+    height: 1px;
+    background-color: #213547;
+    width: 100%;
+    border: none;
 }
 </style>

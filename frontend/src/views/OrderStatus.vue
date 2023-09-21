@@ -39,6 +39,7 @@ export default {
 </script>
 
 <template>
+    <h1>注文状況</h1>
     <table>
         <thead>
             <tr>
