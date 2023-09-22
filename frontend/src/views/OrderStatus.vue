@@ -10,7 +10,7 @@ export default {
     },
     methods: {
         fetchMenu() {
-            axios.get('http://127.0.0.1:8000/api/menus')
+            axios.get(import.meta.env.VITE_API_URL + '/menus')
                 .then(response => {
                     this.menus = response.data
                 })
@@ -19,7 +19,7 @@ export default {
                 });
         },
         fetchOrderStatus() {
-            axios.get("http://127.0.0.1:8000/api/order-status")
+            axios.get(import.meta.env.VITE_API_URL + '/order-status')
                 .then(response => {
                     this.orderStatus = response.data
                 })

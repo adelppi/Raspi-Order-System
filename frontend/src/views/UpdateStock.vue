@@ -10,7 +10,7 @@ export default {
     },
     methods: {
         fetchMenu() {
-            axios.get('http://127.0.0.1:8000/api/menus')
+            axios.get(import.meta.env.VITE_API_URL + '/menus')
                 .then(response => {
                     this.menus = response.data
                 })
@@ -19,7 +19,7 @@ export default {
                 });
         },
         updateStock(menuId, updateQuantity) {
-            axios.post('http://127.0.0.1:8000/api/update-stock', {
+            axios.post(import.meta.env.VITE_API_URL + '/update-stock', {
                 "menuId": menuId,
                 "updateQuantity": updateQuantity
             })

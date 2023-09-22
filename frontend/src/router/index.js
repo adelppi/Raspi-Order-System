@@ -14,7 +14,7 @@ const router = createRouter({
             redirect: '/Menu'
         },
         {
-            path: '/:table_number/Menu',
+            path: '/Menu/:table_number',
             component: Menu
         },
         {

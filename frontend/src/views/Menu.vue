@@ -29,7 +29,7 @@ export default {
             }
         },
         fetchMenu() {
-            axios.get('http://127.0.0.1:8000/api/menus')
+            axios.get(import.meta.env.VITE_API_URL + '/menus')
                 .then(response => {
                     this.menus = response.data
                 })
@@ -39,7 +39,7 @@ export default {
         },
         createOrder() {
             this.parseCart()
-            axios.post('http://127.0.0.1:8000/api/create-order', {
+            axios.post(import.meta.env.VITE_API_URL + '/create-order', {
                 "table_number": this.table_number,
                 "order_items": this.order_items
             })

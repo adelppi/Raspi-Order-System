@@ -10,7 +10,7 @@ export default {
     },
     methods: {
         fetchMenu() {
-            axios.get('http://127.0.0.1:8000/api/menus')
+            axios.get(import.meta.env.VITE_API_URL + '/menus')
                 .then(response => {
                     this.menus = response.data
                 })
@@ -19,7 +19,7 @@ export default {
                 });
         },
         fetchOrderStatus() {
-            axios.get("http://127.0.0.1:8000/api/order-status-sorted")
+            axios.get(import.meta.env.VITE_API_URL + '/order-status-sorted')
                 .then(response => {
                     this.orderStatus = response.data
                 })
@@ -28,7 +28,7 @@ export default {
                 });
         },
         doneServing(tableNumber) {
-            axios.get(`http://127.0.0.1:8000/api/${tableNumber}/done-serving`)
+            axios.get(import.meta.env.VITE_API_URL + `/${tableNumber}/done-serving`)
             this.fetchOrderStatus()
         },
         calculateTotal(tableNumber) {
