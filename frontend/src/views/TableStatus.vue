@@ -50,6 +50,8 @@ export default {
 </script>
 
 <template>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <h2>注文状況</h2>
     <table>
         <thead>
@@ -87,11 +89,19 @@ export default {
                 </td>
 
                 <td v-if="orderStatus[tableNumber]">
-                    <button class="done-button" @click="doneServing(tableNumber)">✔</button>
+                    <button class="done-button" @click="doneServing(tableNumber)">
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                    </button>
                 </td>
-
+                
                 <td v-else>
-                    <button class="done-button-disabled" disabled>✔︎</button>
+                    <button class="done-button-disabled" disabled>
+                        <span class="material-symbols-outlined">
+                            done
+                        </span>
+                    </button>
                 </td>
             </tr>
         </tbody>
@@ -132,6 +142,7 @@ export default {
     width: 2rem;
     border: 1px solid transparent;
     font-size: 10px;
+    align-items: center;
     background-color: #90eca2;
     cursor: pointer;
 }
@@ -143,6 +154,16 @@ export default {
 .price {
     text-align: right;
     font-weight: 600;
+}
+
+.material-symbols-outlined {
+    font-size: 10px;
+    align-items: center     ;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
 }
 
 p {
