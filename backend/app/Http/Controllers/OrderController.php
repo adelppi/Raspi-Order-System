@@ -19,8 +19,10 @@ class OrderController extends Controller
         return "cleared all orders";
     }
 
-    public function doneServing($tableNumber)
+    public function doneServing(Request $request)
     {
+        $jsonData = $request->json()->all();
+        $tableNumber = $jsonData["table_number"];
         
         $data = Order::where('table_number', $tableNumber)
         ->select('menu_id', Order::raw('COUNT(*) as quantity'))

@@ -5,7 +5,8 @@ export default {
     data() {
         return {
             menus: [],
-            orderStatus: []
+            orderStatus: [],
+            token: 0
         }
     },
     methods: {
@@ -28,7 +29,10 @@ export default {
                 });
         },
         doneServing(tableNumber) {
-            axios.get(import.meta.env.VITE_API_URL + `/${tableNumber}/done-serving`)
+            axios.post(import.meta.env.VITE_API_URL + '/done-serving', {
+                "table_number": tableNumber
+            })
+            this.deleteToken(tableNumber)
             this.fetchOrderStatus()
         },
         calculateTotal(tableNumber) {
@@ -37,6 +41,22 @@ export default {
                 totalPrice += this.menus[menuId - 1]["price"] * this.orderStatus[tableNumber][menuId]
             }
             return totalPrice
+        },
+        createQR(tableNumber) {
+            axios.post(import.meta.env.VITE_API_URL + '/create-qr', {
+                "table_number": tableNumber
+            })
+                .then(response => {
+                    this.token = response.data
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        deleteToken(tableNumber) {
+            axios.post(import.meta.env.VITE_API_URL + '/delete-token', {
+                "table_number": tableNumber
+            })
         }
     },
     mounted() {
@@ -60,6 +80,7 @@ export default {
                 <th>注文・金額</th>
                 <th>提供状況</th>
                 <th>提供終了<br>ボタン</th>
+                <th>QR発行<br>ボタン</th>
             </tr>
         </thead>
         <tbody>
@@ -91,20 +112,37 @@ export default {
                 <td v-if="orderStatus[tableNumber]">
                     <button class="done-button" @click="doneServing(tableNumber)">
                         <span class="material-symbols-outlined">
-                            done
+                            check
                         </span>
                     </button>
                 </td>
-                
+
                 <td v-else>
                     <button class="done-button-disabled" disabled>
                         <span class="material-symbols-outlined">
-                            done
+                            check
                         </span>
                     </button>
                 </td>
+
+                <!-- <td v-if="orderStatus[tableNumber]"> -->
+                    <button class="done-button" @click="createQR(tableNumber)">
+                        <span class="material-symbols-outlined" style="color: #213547;">
+                            qr_code_2
+                        </span>
+                    </button>
+                <!-- </td> -->
+
+                <!-- <td v-else>
+                    <button class="done-button-disabled" disabled>
+                        <span class="material-symbols-outlined">
+                            qr_code_2
+                        </span>
+                    </button>
+                </td> -->
             </tr>
         </tbody>
+
     </table>
 </template>
 
@@ -120,6 +158,8 @@ export default {
     font-size: 10px;
     font-weight: 500;
     border-radius: 8px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .status-done,
@@ -143,12 +183,15 @@ export default {
     border: 1px solid transparent;
     font-size: 10px;
     align-items: center;
+    justify-content: center;
     background-color: #90eca2;
     cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .done-button-disabled {
-    background-color: #c1c1c1;
+    background-color: #cbcbcb;
 }
 
 .price {
@@ -157,13 +200,7 @@ export default {
 }
 
 .material-symbols-outlined {
-    font-size: 10px;
-    align-items: center     ;
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
+    font-size: 20px;
 }
 
 p {
