@@ -17,7 +17,8 @@ export default {
             cart: {},
             order_items: [],
             showCartDialog: false,
-            banners: []
+            banners: [],
+            extra: ""
         }
     },
     methods: {
@@ -72,6 +73,7 @@ export default {
     mounted() {
         this.fetchMenu()
         this.table_number = this.$route.params["table_number"]
+        this.extra = import.meta.env.VITE_EXTRA
     }
 }
 </script>
@@ -118,7 +120,7 @@ export default {
     </div>
     <div :class="{ 'disable-events': showCartDialog }">
         <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price" :stock="menu.stock"
-            :description="menu.description" :imagePath="`../src/assets/${menu.menu_id}.jpg`" @update-cart="updateCart" />
+            :description="menu.description" :imagePath="`${extra}/assets/thumbnails/${menu.menu_id}.jpg`" @update-cart="updateCart" />
     </div>
     <div class="fixed-button">
         <button @click="showCartDialog = !showCartDialog">
