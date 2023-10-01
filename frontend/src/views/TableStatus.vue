@@ -1,12 +1,30 @@
 <script>
 import axios from "axios"
+import VueQrcode from "@chenfengyuan/vue-qrcode"
 
 export default {
+    components: {
+        VueQrcode
+    },
     data() {
         return {
             menus: [],
             orderStatus: [],
-            token: 0
+            token: 0,
+            qrUrl: "",
+            isQrShown: false,
+            guideNumber: 0,
+            qrStyle: {
+                errorCorrectionLevel: "M",
+                maskPattern: 0,
+                margin: 1,
+                scale: 2,
+                width: 200,
+                color: {
+                    dark: "#213547",
+                    light: "#FFFFFFFF"
+                }
+            }
         }
     },
     methods: {
@@ -48,6 +66,9 @@ export default {
             })
                 .then(response => {
                     this.token = response.data
+                    this.qrUrl = `${import.meta.env.VITE_APP_URL}/Menu/${tableNumber}/${this.token}`
+                    this.guideNumber = tableNumber
+                    this.isQrShown = true
                 })
                 .catch(error => {
                     console.log(error);
@@ -72,6 +93,13 @@ export default {
 <template>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <div v-if="isQrShown" class="qr-dialog">
+        <h2>{{ guideNumber }}番席へのご案内</h2>
+        <vue-qrcode :value="qrUrl" :options="qrStyle" tag="img"></vue-qrcode>
+        <span style="font-size: 0.75rem;">{{ qrUrl }}</span>
+    </div>
+    <div v-if="isQrShown" class="overlay" @click="isQrShown = false"></div>
     <h2>注文状況</h2>
     <table>
         <thead>
@@ -109,6 +137,14 @@ export default {
                     </span>
                 </td>
 
+                <td>
+                    <button class="done-button" @click="createQR(tableNumber)">
+                        <span class="material-symbols-outlined" style="color: #213547;">
+                            qr_code_2
+                        </span>
+                    </button>
+                </td>
+
                 <td v-if="orderStatus[tableNumber]">
                     <button class="done-button" @click="doneServing(tableNumber)">
                         <span class="material-symbols-outlined">
@@ -124,29 +160,39 @@ export default {
                         </span>
                     </button>
                 </td>
-
-                <!-- <td v-if="orderStatus[tableNumber]"> -->
-                    <button class="done-button" @click="createQR(tableNumber)">
-                        <span class="material-symbols-outlined" style="color: #213547;">
-                            qr_code_2
-                        </span>
-                    </button>
-                <!-- </td> -->
-
-                <!-- <td v-else>
-                    <button class="done-button-disabled" disabled>
-                        <span class="material-symbols-outlined">
-                            qr_code_2
-                        </span>
-                    </button>
-                </td> -->
             </tr>
         </tbody>
-
     </table>
 </template>
 
 <style scoped>
+.qr-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    max-width: 400px;
+    width: 90%;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    cursor: pointer;
+    overflow: hidden;
+    touch-action: none;
+}
+
 .status-done,
 .status-not-done,
 .done-button,
