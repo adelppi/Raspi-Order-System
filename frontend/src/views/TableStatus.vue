@@ -74,8 +74,8 @@ export default {
                     console.log(error);
                 });
         },
-        deleteToken(tableNumber) {
-            axios.post(import.meta.env.VITE_API_URL + '/delete-token', {
+        revokeToken(tableNumber) {
+            axios.post(import.meta.env.VITE_API_URL + '/revoke-token', {
                 "table_number": tableNumber
             })
         }
@@ -95,7 +95,7 @@ export default {
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <div v-if="isQrShown" class="qr-dialog">
-        <h2>{{ guideNumber }}番席へのご案内</h2>
+        <h2>{{ guideNumber }}番テーブルへのご案内</h2>
         <vue-qrcode :value="qrUrl" :options="qrStyle" tag="img"></vue-qrcode>
         <span style="font-size: 0.75rem;">{{ qrUrl }}</span>
     </div>
@@ -108,12 +108,18 @@ export default {
                 <th>注文・金額</th>
                 <th>提供状況</th>
                 <th>提供終了<br>ボタン</th>
-                <th>QR発行<br>ボタン</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="tableNumber in 6">
-                <td>{{ tableNumber }}</td>
+                <td>
+                    <div style=" align-items: center;">
+                        {{ tableNumber }}
+                        <span class="material-symbols-outlined qr-button" @click="createQR(tableNumber)">
+                            qr_code_2
+                        </span>
+                    </div>
+                </td>
 
                 <td>
                     <span v-for="(quantity, menu_id) in orderStatus[tableNumber]" style="text-align: right;">
@@ -135,14 +141,6 @@ export default {
                     <span class="status-not-done">
                         <p>空席 or<br>提供済み</p>
                     </span>
-                </td>
-
-                <td>
-                    <button class="done-button" @click="createQR(tableNumber)">
-                        <span class="material-symbols-outlined" style="color: #213547;">
-                            qr_code_2
-                        </span>
-                    </button>
                 </td>
 
                 <td v-if="orderStatus[tableNumber]">
@@ -234,6 +232,15 @@ export default {
     cursor: pointer;
     margin-left: auto;
     margin-right: auto;
+}
+
+.qr-button {
+    font-size: 15px;
+    /* position: absolute; */
+    /* transform: translate(-200%, -75%); */
+    color: #213547;
+    /* background-color: rebeccapurple; */
+    cursor: pointer;
 }
 
 .done-button-disabled {
