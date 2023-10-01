@@ -18,7 +18,9 @@ export default {
             order_items: [],
             showCartDialog: false,
             banners: [],
-            extra: ""
+            extra: "",
+            token: 0,
+            answerToken: 0
         }
     },
     methods: {
@@ -68,69 +70,88 @@ export default {
                 totalPrice += this.menus[menuId - 1]["price"] * this.cart[menuId]
             }
             return totalPrice
+        },
+        fetchToken() {
+            axios.post(import.meta.env.VITE_API_URL + '/get-token', {
+                "table_number": this.table_number
+            })
+                .then(response => {
+                    this.answerToken = response.data
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     },
     mounted() {
-        this.fetchMenu()
         this.table_number = this.$route.params["table_number"]
+        this.token = Number(this.$route.params["token"])
         this.extra = import.meta.env.VITE_EXTRA
+        this.fetchMenu()
+        this.fetchToken()
     }
 }
 </script>
 
 <template>
-    <h1>メニュー</h1>
-    <div v-if="showCartDialog" class="cart-dialog">
-        <div v-if="Object.keys(cart).length">
-            <h2>カート</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>商品名</th>
-                        <th>数量</th>
-                        <th>価格</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(quantity, item) in cart" :key="item">
-                        <td>
-                            <button @click="removeItem(item)">削除</button>
-                            {{ menus[item - 1]["title"] }}
-                        </td>
-                        <td>{{ quantity }}</td>
-                        <td>¥{{ menus[item - 1]["price"] * quantity }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="total">合計金額: ¥{{ calculateTotal() }}</p>
-            <RouterLink to="/Wait">
-                <span @click="createOrder()" class="order-button">
-                    注文する
-                </span>
-            </RouterLink>
+    <div v-if="token === answerToken">
+        <h1>メニュー</h1>
+        <div v-if="showCartDialog" class="cart-dialog">
+            <div v-if="Object.keys(cart).length">
+                <h2>カート</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>商品名</th>
+                            <th>数量</th>
+                            <th>価格</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(quantity, item) in cart" :key="item">
+                            <td>
+                                <button @click="removeItem(item)">削除</button>
+                                {{ menus[item - 1]["title"] }}
+                            </td>
+                            <td>{{ quantity }}</td>
+                            <td>¥{{ menus[item - 1]["price"] * quantity }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="total">合計金額: ¥{{ calculateTotal() }}</p>
+                <RouterLink to="/Wait">
+                    <span @click="createOrder()" class="order-button">
+                        注文する
+                    </span>
+                </RouterLink>
+            </div>
+            <div v-else>
+                <h2>カートに何もないよ！</h2>
+            </div>
         </div>
-        <div v-else>
-            <h2>カートに何もないよ！</h2>
-        </div>
-    </div>
-    <div v-if="showCartDialog" class="overlay" @click="showCartDialog = false"></div>
+        <div v-if="showCartDialog" class="overlay" @click="showCartDialog = false"></div>
 
-    <div class="banner-stack">
-        <Banner v-for="banner in banners" :itemTitle="banner.itemTitle" :quantity="banner.quantity" />
+        <div class="banner-stack">
+            <Banner v-for="banner in banners" :itemTitle="banner.itemTitle" :quantity="banner.quantity" />
+        </div>
+        <div :class="{ 'disable-events': showCartDialog }">
+            <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price" :stock="menu.stock"
+                :description="menu.description" :imagePath="`${extra}/assets/thumbnails/${menu.menu_id}.jpg`"
+                @update-cart="updateCart" />
+        </div>
+        <div class="fixed-button">
+            <button @click="showCartDialog = !showCartDialog">
+                <span v-if="showCartDialog">
+                    カートを閉じる
+                </span>
+                <span v-else>
+                    カートを見る
+                </span>
+            </button>
+        </div>
     </div>
-    <div :class="{ 'disable-events': showCartDialog }">
-        <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price" :stock="menu.stock"
-            :description="menu.description" :imagePath="`${extra}/assets/thumbnails/${menu.menu_id}.jpg`" @update-cart="updateCart" />
-    </div>
-    <div class="fixed-button">
-        <button @click="showCartDialog = !showCartDialog">
-            <span v-if="showCartDialog">
-                カートを閉じる
-            </span>
-            <span v-else>
-                カートを見る
-            </span>
-        </button>
+    <div v-else>
+        <h2>トークンが発行されていません。<br>店員にお尋ねください。</h2>
     </div>
 </template>
 
@@ -141,7 +162,7 @@ export default {
     position: fixed;
     bottom: 10%;
     left: 50%;
-    transform: translate(-50%, 0); 
+    transform: translate(-50%, 0);
 }
 
 .fixed-button {

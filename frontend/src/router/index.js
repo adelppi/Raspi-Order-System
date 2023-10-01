@@ -14,7 +14,7 @@ const router = createRouter({
             redirect: '/Menu'
         },
         {
-            path: '/Menu/:table_number',
+            path: '/Menu/:table_number/:token',
             component: Menu
         },
         {

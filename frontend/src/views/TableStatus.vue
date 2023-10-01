@@ -1,11 +1,30 @@
 <script>
 import axios from "axios"
+import VueQrcode from "@chenfengyuan/vue-qrcode"
 
 export default {
+    components: {
+        VueQrcode
+    },
     data() {
         return {
             menus: [],
-            orderStatus: []
+            orderStatus: [],
+            token: 0,
+            qrUrl: "",
+            isQrShown: false,
+            guideNumber: 0,
+            qrStyle: {
+                errorCorrectionLevel: "M",
+                maskPattern: 0,
+                margin: 1,
+                scale: 2,
+                width: 200,
+                color: {
+                    dark: "#213547",
+                    light: "#FFFFFFFF"
+                }
+            }
         }
     },
     methods: {
@@ -28,7 +47,10 @@ export default {
                 });
         },
         doneServing(tableNumber) {
-            axios.get(import.meta.env.VITE_API_URL + `/${tableNumber}/done-serving`)
+            axios.post(import.meta.env.VITE_API_URL + '/done-serving', {
+                "table_number": tableNumber
+            })
+            this.deleteToken(tableNumber)
             this.fetchOrderStatus()
         },
         calculateTotal(tableNumber) {
@@ -37,6 +59,25 @@ export default {
                 totalPrice += this.menus[menuId - 1]["price"] * this.orderStatus[tableNumber][menuId]
             }
             return totalPrice
+        },
+        createQR(tableNumber) {
+            axios.post(import.meta.env.VITE_API_URL + '/create-qr', {
+                "table_number": tableNumber
+            })
+                .then(response => {
+                    this.token = response.data
+                    this.qrUrl = `${import.meta.env.VITE_APP_URL}/Menu/${tableNumber}/${this.token}`
+                    this.guideNumber = tableNumber
+                    this.isQrShown = true
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        deleteToken(tableNumber) {
+            axios.post(import.meta.env.VITE_API_URL + '/delete-token', {
+                "table_number": tableNumber
+            })
         }
     },
     mounted() {
@@ -52,6 +93,13 @@ export default {
 <template>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <div v-if="isQrShown" class="qr-dialog">
+        <h2>{{ guideNumber }}番席へのご案内</h2>
+        <vue-qrcode :value="qrUrl" :options="qrStyle" tag="img"></vue-qrcode>
+        <span style="font-size: 0.75rem;">{{ qrUrl }}</span>
+    </div>
+    <div v-if="isQrShown" class="overlay" @click="isQrShown = false"></div>
     <h2>注文状況</h2>
     <table>
         <thead>
@@ -60,6 +108,7 @@ export default {
                 <th>注文・金額</th>
                 <th>提供状況</th>
                 <th>提供終了<br>ボタン</th>
+                <th>QR発行<br>ボタン</th>
             </tr>
         </thead>
         <tbody>
@@ -88,18 +137,26 @@ export default {
                     </span>
                 </td>
 
-                <td v-if="orderStatus[tableNumber]">
-                    <button class="done-button" @click="doneServing(tableNumber)">
-                        <span class="material-symbols-outlined">
-                            done
+                <td>
+                    <button class="done-button" @click="createQR(tableNumber)">
+                        <span class="material-symbols-outlined" style="color: #213547;">
+                            qr_code_2
                         </span>
                     </button>
                 </td>
-                
+
+                <td v-if="orderStatus[tableNumber]">
+                    <button class="done-button" @click="doneServing(tableNumber)">
+                        <span class="material-symbols-outlined">
+                            check
+                        </span>
+                    </button>
+                </td>
+
                 <td v-else>
                     <button class="done-button-disabled" disabled>
                         <span class="material-symbols-outlined">
-                            done
+                            check
                         </span>
                     </button>
                 </td>
@@ -109,6 +166,33 @@ export default {
 </template>
 
 <style scoped>
+.qr-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    max-width: 400px;
+    width: 90%;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    cursor: pointer;
+    overflow: hidden;
+    touch-action: none;
+}
+
 .status-done,
 .status-not-done,
 .done-button,
@@ -120,6 +204,8 @@ export default {
     font-size: 10px;
     font-weight: 500;
     border-radius: 8px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .status-done,
@@ -143,12 +229,15 @@ export default {
     border: 1px solid transparent;
     font-size: 10px;
     align-items: center;
+    justify-content: center;
     background-color: #90eca2;
     cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .done-button-disabled {
-    background-color: #c1c1c1;
+    background-color: #cbcbcb;
 }
 
 .price {
@@ -157,13 +246,7 @@ export default {
 }
 
 .material-symbols-outlined {
-    font-size: 10px;
-    align-items: center     ;
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
+    font-size: 20px;
 }
 
 p {
