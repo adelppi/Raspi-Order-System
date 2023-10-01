@@ -46,6 +46,7 @@ export default {
                 "table_number": this.table_number,
                 "order_items": this.order_items
             })
+            this.revokeToken(this.table_number)
         },
         // 子(Card.vue)から親(Menu.vue)へ変数の受け渡し
         updateCart(menuId, quantity) {
@@ -81,10 +82,15 @@ export default {
                 .catch(error => {
                     console.log(error);
                 });
+        },
+        revokeToken(tableNumber) {
+            axios.post(import.meta.env.VITE_API_URL + '/revoke-token', {
+                "table_number": tableNumber
+            })
         }
     },
     mounted() {
-        this.table_number = this.$route.params["table_number"]
+        this.table_number =  Number(this.$route.params["table_number"])
         this.token = Number(this.$route.params["token"])
         this.extra = import.meta.env.VITE_EXTRA
         this.fetchMenu()

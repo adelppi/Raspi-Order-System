@@ -28,13 +28,13 @@ class TokenController extends Controller
         }
     }
 
-    public function deleteToken(Request $request)
+    public function revokeToken(Request $request)
     {
         $jsonData = $request->json()->all();
         $tableNumber = $jsonData["table_number"];
         Token::where('table_number', $tableNumber)->delete();
 
-        return "deleted token(table_number = $tableNumber)";
+        return "revoked token(table_number = $tableNumber)";
     }
 
     public function getToken(Request $request)

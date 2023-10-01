@@ -28,7 +28,7 @@ Route::post('/update-stock', 'App\Http\Controllers\MenuController@updateStock');
 // Route::get('/clear-all-orders', 'App\Http\Controllers\OrderController@clearAllOrders');
 Route::post('/create-order', 'App\Http\Controllers\OrderController@createOrder');
 Route::post('/create-qr', 'App\Http\Controllers\TokenController@createQR');
-Route::post('/delete-token', 'App\Http\Controllers\TokenController@deleteToken');
+Route::post('/revoke-token', 'App\Http\Controllers\TokenController@revokeToken');
 Route::post('/get-token', 'App\Http\Controllers\TokenController@getToken');
 Route::get('/order-status-sorted', 'App\Http\Controllers\OrderController@orderStatusSorted');
 Route::get('/order-status', 'App\Http\Controllers\OrderController@orderStatus');
