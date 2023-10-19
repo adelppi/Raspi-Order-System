@@ -35,18 +35,22 @@ export default {
       <img :src="imagePath" alt="商品画像" />
     </div>
     <div class="card-content">
-      <h3 class="card-title">{{ title }}</h3>
-      <span v-if="stock === 0">在庫ないよ</span>
-      <p class="card-description">{{ description }}</p>
+      <h2 class="card-title">
+        <s v-if="stock === 0">{{ title }}</s>
+        <span v-else>{{ title }}</span>
+      </h2>
+      <!-- <p class="card-description">{{ description }}</p> -->
       <div class="card-footer">
         <span class="card-price">¥{{ price }}</span>
         <div class="quantity-selector">
-          <button class="decrement-button" @click="decrementQuantity">-</button>
+          <button class="decrement-button" @click="decrementQuantity" :disabled="stock === 0">-</button>
           <span class="quantity-number">{{ quantity }}</span>
-          <button class="increment-button" @click="incrementQuantity">+</button>
+          <button class="increment-button" @click="incrementQuantity" :disabled="stock === 0">+</button>
         </div>
       </div>
-      <button class="add-to-cart-button" @click="addToCart">カートに追加</button>
+      <span class="sold-out" v-if="stock === 0">売り切れました</span>
+      <button v-if="stock === 0" class="add-to-cart-button-disabled" disabled>カートに追加</button>
+      <button v-else class="add-to-cart-button" @click="addToCart">カートに追加</button>
     </div>
   </div>
 </template>
@@ -71,13 +75,11 @@ export default {
 
 .card-content {
   background-color: #ffffff;
-  /* padding-left: 1rem;
-  padding-right: 1rem; */
-  padding: 1rem;
+  padding: 1rem 3rem 1rem 3rem;
 }
 
 .card-title {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin: 0;
 }
@@ -101,6 +103,18 @@ export default {
 
 .add-to-cart-button {
   background-color: #419dff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  /* padding: 8px 16px; */
+  ;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-to-cart-button-disabled {
+  background-color: #919191;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -147,6 +161,10 @@ export default {
   display: flex;
   background-color: #efefef;
   border-radius: 4px;
+}
+
+.sold-out {
+  color: #c41c4c;
 }
 </style>
   
