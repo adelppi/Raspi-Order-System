@@ -40,17 +40,21 @@ export default {
         <span v-else>{{ title }}</span>
       </h2>
       <!-- <p class="card-description">{{ description }}</p> -->
+      <span class="card-price">¥{{ price }}</span>
       <div class="card-footer">
-        <span class="card-price">¥{{ price }}</span>
-        <div class="quantity-selector">
+        <div v-if="$route.path !== '/Products'" class="quantity-selector">
           <button class="decrement-button" @click="decrementQuantity" :disabled="stock === 0">-</button>
           <span class="quantity-number">{{ quantity }}</span>
           <button class="increment-button" @click="incrementQuantity" :disabled="stock === 0">+</button>
         </div>
+        <div style="display: flex; flex-direction: column;">
+          <span class="sold-out" v-if="stock === 0">売り切れました</span>
+          <div v-if="$route.path !== '/Products'">
+            <button v-if="stock === 0" class="add-to-cart-button-disabled" disabled>カートに追加</button>
+            <button v-else class="add-to-cart-button" @click="addToCart">カートに追加</button>
+          </div>
+        </div>
       </div>
-      <span class="sold-out" v-if="stock === 0">売り切れました</span>
-      <button v-if="stock === 0" class="add-to-cart-button-disabled" disabled>カートに追加</button>
-      <button v-else class="add-to-cart-button" @click="addToCart">カートに追加</button>
     </div>
   </div>
 </template>
@@ -58,28 +62,34 @@ export default {
 
 <style scoped>
 .card {
+  display: flex;
+  flex-direction: row;
   border: 1px solid #ccc;
   background-color: #c41c4c;
-  border-radius: 8px;
-  margin: 16px;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  /* margin: 1rem; */
   overflow: hidden;
-  max-width: 300px;
+  /* max-width: 300px; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
 }
 
 .card-image img {
-  width: 100%;
+  width: 10rem;
+  height: 10rem;
+  aspect-ratio: 1;
   height: auto;
 }
 
 .card-content {
   background-color: #ffffff;
-  padding: 1rem 3rem 1rem 3rem;
+  width: 20rem;
+  padding: 1rem;
 }
 
 .card-title {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   margin: 0;
 }
@@ -97,8 +107,7 @@ export default {
 }
 
 .card-price {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.4rem;
 }
 
 .add-to-cart-button {
@@ -106,9 +115,6 @@ export default {
   color: #fff;
   border: none;
   border-radius: 4px;
-  /* padding: 8px 16px; */
-  ;
-  margin-top: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -118,9 +124,6 @@ export default {
   color: #fff;
   border: none;
   border-radius: 4px;
-  /* padding: 8px 16px; */
-  ;
-  margin-top: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
 }

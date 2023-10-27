@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Products from '../views/Products.vue'
 import Menu from '../views/Menu.vue'
 import TableStatus from '../views/TableStatus.vue'
 import Wait from '../views/Wait.vue'
@@ -14,7 +15,11 @@ const router = createRouter({
             redirect: '/Menu'
         },
         {
-            path: '/Menu/:table_number/:token',
+            path: '/Products',
+            component: Products
+        },
+        {
+            path: '/Menu/:table_number/:token?',
             component: Menu
         },
         {
