@@ -34,7 +34,7 @@ export default {
     <h1>メニュー</h1>
     <div>
         <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price" :stock="menu.stock"
-            :description="menu.description" :imagePath="`${extra}/assets/thumbnails/${menu.menu_id}.jpg`" />
+            :description="menu.description" :imagePath="menu.description === 'drink' ? `${extra}/assets/thumbnails/${menu.menu_id}.png` : `${extra}/assets/thumbnails/${menu.menu_id}.jpg`" />
     </div>
 </template>
 
