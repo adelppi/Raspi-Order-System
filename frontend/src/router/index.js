@@ -19,7 +19,7 @@ const router = createRouter({
             component: Products
         },
         {
-            path: '/Menu/:table_number/:token?',
+            path: '/Menu/:table_number/:token',
             component: Menu
         },
         {
