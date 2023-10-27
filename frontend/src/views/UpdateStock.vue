@@ -46,7 +46,7 @@ export default {
                 <td>{{ menu.menu_id }}</td>
                 <td>{{ menu.title }}</td>
                 <td>
-                    <input type="number" v-model="menus[menu.menu_id - 1]['stock']" />
+                    <input type="number" v-model="menus[menu.menu_id - 1]['stock']" />個
                     <button @click="updateStock(menu.menu_id, menus[menu.menu_id - 1]['stock'])">更新</button>
                 </td>
             </tr>
