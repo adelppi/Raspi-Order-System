@@ -23,12 +23,12 @@ class OrderController extends Controller
     {
         $jsonData = $request->json()->all();
         $tableNumber = $jsonData["table_number"];
-        
+
         $data = Order::where('table_number', $tableNumber)
-        ->select('menu_id', Order::raw('COUNT(*) as quantity'))
-        ->groupBy('menu_id')
-        ->get();
-        
+            ->select('menu_id', Order::raw('COUNT(*) as quantity'))
+            ->groupBy('menu_id')
+            ->get();
+
         $menuIdAndQuantities = [];
         foreach ($data as $row) {
             $menuIdAndQuantities[$row->menu_id] = $row->quantity;
@@ -39,7 +39,7 @@ class OrderController extends Controller
             $newStock = $menu["stock"] - $consumedStock;
             $menu->update(['stock' => $newStock]);
         }
-        
+
         Order::where('table_number', $tableNumber)->delete();
         return $menu;
     }
@@ -89,9 +89,10 @@ class OrderController extends Controller
 
     public function orderStatus()
     {
-        $data = Order::select('table_number', 'menu_id')
-            ->groupBy('table_number', 'menu_id')
+        $data = Order::select('table_number', 'menu_id', 'created_at')
+            ->groupBy('table_number', 'menu_id', 'created_at')
             ->selectRaw('table_number, menu_id, count(*) as count')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         $result = [];

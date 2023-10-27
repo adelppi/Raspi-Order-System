@@ -25,7 +25,7 @@ Route::get('/menus', [MenuController::class, 'index']);
 Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/done-serving', 'App\Http\Controllers\OrderController@doneServing');
 Route::post('/update-stock', 'App\Http\Controllers\MenuController@updateStock');
-// Route::get('/clear-all-orders', 'App\Http\Controllers\OrderController@clearAllOrders');
+Route::get('/clear-all-orders', 'App\Http\Controllers\OrderController@clearAllOrders');
 Route::post('/create-order', 'App\Http\Controllers\OrderController@createOrder');
 Route::post('/create-qr', 'App\Http\Controllers\TokenController@createQR');
 Route::post('/revoke-token', 'App\Http\Controllers\TokenController@revokeToken');
