@@ -17,25 +17,46 @@ class MenuSeeder extends Seeder
         DB::table('menus')->insert([
             [
                 'menu_id' => 1,
-                'title' => 'ラズベリーパイ',
-                'description' => 'おいしいラズパイです。',
-                'price' => 300,
-                'stock' => 100
+                'title' => 'ラズベリーパイ&ドリンクセット',
+                'description' => 'set',
+                'price' => 500,
+                'stock' => 50
             ],
             [
                 'menu_id' => 2,
-                'title' => 'クッキー',
-                'description' => 'おいしいクッキーです。',
-                'price' => 200,
-                'stock' => 100
+                'title' => 'ベビーカステラ',
+                'description' => 'food',
+                'price' => 100,
+                'stock' => 50
             ],
             [
                 'menu_id' => 3,
-                'title' => 'ジュース',
-                'description' => 'おいしいジュースです。',
-                'price' => 150,
-                'stock' => 100
-            ]
+                'title' => '缶コーヒー',
+                'description' => 'drink',
+                'price' => 200,
+                'stock' => 50
+            ],
+            [
+                'menu_id' => 4,
+                'title' => '紅茶',
+                'description' => 'drink',
+                'price' => 200,
+                'stock' => 50
+            ],
+            [
+                'menu_id' => 5,
+                'title' => '緑茶',
+                'description' => 'drink',
+                'price' => 200,
+                'stock' => 50
+            ],
+            [
+                'menu_id' => 6,
+                'title' => '三ツ矢サイダー',
+                'description' => 'drink',
+                'price' => 200,
+                'stock' => 50
+            ],
         ]);
     }
 }
