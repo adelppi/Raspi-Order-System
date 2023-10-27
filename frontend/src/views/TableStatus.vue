@@ -111,7 +111,7 @@ export default {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="tableNumber in 6">
+            <tr v-for="tableNumber in 7">
                 <td>
                     <div style=" align-items: center;">
                         {{ tableNumber }}
