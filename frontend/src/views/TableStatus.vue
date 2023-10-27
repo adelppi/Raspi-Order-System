@@ -209,6 +209,9 @@ export default {
 .status-done,
 .status-not-done {
     /* height: 100%; */
+    height: 3rem;
+    width: 5rem;
+    font-size: 0.8rem;
     border: 1.25px solid transparent;
 }
 
@@ -222,7 +225,7 @@ export default {
 
 .done-button,
 .done-button-disabled {
-    height: 2rem;
+    height: 2.8rem;
     width: 2rem;
     border: 1px solid transparent;
     font-size: 10px;
