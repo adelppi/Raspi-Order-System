@@ -5,7 +5,8 @@ export default {
     data() {
         return {
             menus: [],
-            orderStatus: []
+            orderStatus: [],
+            checkedOrder: [],
         }
     },
     methods: {
@@ -50,7 +51,7 @@ export default {
         </thead>
         <tbody v-for="order in orderStatus">
             <tr v-for="(orderItems, tableNumber) in order" :key="tableNumber">
-                <td>{{ tableNumber }}</td>
+                <td>{{ tableNumber }} <input type="checkbox" ></td>
                 <td>
                     <span v-for="(_, menu_id) in orderItems" :key="menu_id">
                         {{ menus[menu_id - 1]["title"] }}<br>
@@ -69,7 +70,7 @@ export default {
 <style scoped>
 table {
     width: 100%;
-    font-size: 25px;
+    font-size: 1.8rem;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
