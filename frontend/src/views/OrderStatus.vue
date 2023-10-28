@@ -6,7 +6,6 @@ export default {
         return {
             menus: [],
             orderStatus: [],
-            checkedOrder: [],
         }
     },
     methods: {
