@@ -6,7 +6,6 @@ export default {
         return {
             menus: [],
             orderStatus: [],
-            checkedOrder: [],
         }
     },
     methods: {
@@ -70,7 +69,7 @@ export default {
 <style scoped>
 table {
     width: 100%;
-    font-size: 25px;
+    font-size: 1.8rem;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
