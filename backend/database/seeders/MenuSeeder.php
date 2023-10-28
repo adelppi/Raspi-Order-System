@@ -51,56 +51,56 @@ class MenuSeeder extends Seeder
                 'stock' => 50
             ],
             [
-                'menu_id' => 5,
+                'menu_id' => 6,
                 'title' => 'ジャム・いちご',
                 'description' => 'jam',
                 'price' => 0,
                 'stock' => 50
             ],
             [
-                'menu_id' => 5,
+                'menu_id' => 6,
                 'title' => 'ジャム・ブルーベリー',
                 'description' => 'jam',
                 'price' => 0,
                 'stock' => 50
             ],
             [
-                'menu_id' => 5,
+                'menu_id' => 7,
                 'title' => 'ジャム・マーマレード',
                 'description' => 'jam',
                 'price' => 0,
                 'stock' => 50
             ],
             [
-                'menu_id' => 6,
+                'menu_id' => 8,
                 'title' => '単品・缶コーヒー',
                 'description' => 'drink',
                 'price' => 200,
                 'stock' => 50
             ],
             [
-                'menu_id' => 7,
+                'menu_id' => 9,
                 'title' => '単品・紅茶',
                 'description' => 'drink',
                 'price' => 200,
                 'stock' => 50
             ],
             [
-                'menu_id' => 8,
+                'menu_id' => 10,
                 'title' => '単品・緑茶',
                 'description' => 'drink',
                 'price' => 200,
                 'stock' => 50
             ],
             [
-                'menu_id' => 9,
+                'menu_id' => 11,
                 'title' => 'コーラ',
                 'description' => 'drink',
                 'price' => 200,
                 'stock' => 50
             ],
             [
-                'menu_id' => 10,
+                'menu_id' => 12,
                 'title' => '単品・三ツ矢サイダー',
                 'description' => 'drink',
                 'price' => 200,
