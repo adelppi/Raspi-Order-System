@@ -142,7 +142,7 @@ export default {
         </div>
         <div :class="{ 'disable-events': showCartDialog }">
             <Card v-for="menu in menus" :menuId="menu.menu_id" :title="menu.title" :price="menu.price" :stock="menu.stock"
-                :description="menu.description" :imagePath="menu.description === 'drink' ? `${extra}/assets/thumbnails/${menu.menu_id}.png` : `${extra}/assets/thumbnails/${menu.menu_id}.jpg`"
+                :description="menu.description" :imagePath="(menu.description === 'drink') || (menu.description === 'jam') ? `${extra}/assets/thumbnails/${menu.menu_id}.png` : `${extra}/assets/thumbnails/${menu.menu_id}.jpg`"
                 @update-cart="updateCart" />
         </div>
         <div class="fixed-button">
